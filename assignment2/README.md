@@ -74,6 +74,7 @@ Additionally, please answer the following short answer question in `short_answer
 > ### `short_answer.txt`
 >
 > **Q1:** It is your choice to use either an ordered or unordered set. In a few sentences, what are some of the tradeoffs between the two? Additionally, please give an example (that has not been shown in lecture) of a valid hash function that could be used to hash student names for an unordered set.
+Answer: Unordered set is optimal for quick access, but not frequently looping the container. Ordered set is for frequent looping.
 
 > [!NOTE]
 > All names appearing in this assignment are fictitious. Any resemblance to real persons, living or dead, is purely coincidental.

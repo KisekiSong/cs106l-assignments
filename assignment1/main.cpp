@@ -25,9 +25,9 @@ const std::string COURSES_NOT_OFFERED_PATH = "student_output/courses_not_offered
  * Hint: Remember what types C++ streams work with?!
  */
 struct Course {
-  /* STUDENT TODO */ title;
-  /* STUDENT TODO */ number_of_units;
-  /* STUDENT TODO */ quarter;
+  std::string title;
+  std::string number_of_units;
+  std::string quarter;
 };
 
 /**
@@ -58,8 +58,28 @@ struct Course {
  * @param filename The name of the file to parse.
  * @param courses  A vector of courses to populate.
  */
-void parse_csv(std::string filename, std::vector<Course> courses) {
-  /* (STUDENT TODO) Your code goes here... */
+void parse_csv(std::string filename, std::vector<Course>& courses) {
+  // For each line in the csv file, create a struct Course containing the Title
+  // Number of Units, and Quarter
+  // For the parameter:
+  //    the filename is given, and the vector of course is given
+  //    the task now is to open the file, split the data, and write the data in the vector
+  
+  // Open the file:
+  std::ifstream input(filename);
+  // Read the file from one line and skip the first line
+  std::string line_now;
+  std::getline(input, line_now);
+  std::vector<std::string> split_data;
+  for(int i = 0; std::getline(input, line_now); ++i)
+  {
+    // Every line is read as a string, pass the string to the split function
+    // The split function will return a vector containing data that is split
+    split_data = split(line_now, ',');
+    // Assign value to the ith struct in the struct vector
+    courses.push_back({split_data.at(0), split_data.at(1),split_data.at(2)});
+
+  }
 }
 
 /**
@@ -80,8 +100,32 @@ void parse_csv(std::string filename, std::vector<Course> courses) {
  * @param all_courses A vector of all courses gotten by calling `parse_csv`.
  *                    This vector will be modified by removing all offered courses.
  */
-void write_courses_offered(std::vector<Course> all_courses) {
-  /* (STUDENT TODO) Your code goes here... */
+void write_courses_offered(std::vector<Course>& all_courses) {
+  // Use a for loop to populate all_courses and do two things
+  // if the quarter is not null:
+  // 1. write out to the courses_offered.csv (write the head before loop)
+  // 2. delete this course in the all_courses vector using the delete_elem_from_vector function
+  // in the loop we will only write to the courses_offered.csv. The delete operation will be done
+  // later so that it won't interrupt our population process.
+  std::vector<Course> offered_courses;
+  std::ofstream offered_file("./student_output/courses_offered.csv");
+  // Header of the table
+  offered_file << "Title" << "," << "Number of Units" << "," << "Quarter" << "\n";
+  int i = 0;
+  for(auto it = all_courses.begin(); it != all_courses.end(); ++it)
+  {
+    if(it->quarter != "null")
+    {
+      // It's offered course, write it to the file and the offered_courses as a record
+      offered_file << it->title << "," << it->number_of_units << "," << it->quarter << "\n";
+      offered_courses.push_back({it->title, it->number_of_units, it->quarter});
+    } 
+  }
+  // Delete the recorded offered courses in offered_courses vector using delete_elem_from_vector function
+  for(auto it = offered_courses.begin(); it != offered_courses.end(); ++it)
+  {
+    delete_elem_from_vector(all_courses, *it);
+  }
 }
 
 /**
@@ -97,8 +141,15 @@ void write_courses_offered(std::vector<Course> all_courses) {
  *
  * @param unlisted_courses A vector of courses that are not offered.
  */
-void write_courses_not_offered(std::vector<Course> unlisted_courses) {
-  /* (STUDENT TODO) Your code goes here... */
+void write_courses_not_offered(std::vector<Course>& unlisted_courses) {
+  // One need: write the courses from the unlisted_courses vector to the file courses_not_offered.csv
+  // Remember to create a table header before writing the courese
+  std::ofstream output_file("student_output/courses_not_offered.csv");
+  output_file << "Title" << "," << "Number of Units" << "," << "Quarter" << "\n";
+  for(auto it = unlisted_courses.begin(); it != unlisted_courses.end(); ++it)
+  {
+    output_file << it->title << "," << it->number_of_units << "," << it->quarter << "\n";
+  }
 }
 
 int main() {
